@@ -111,7 +111,6 @@ impl ApubObject for ApubPost {
       content: self.body.as_ref().map(|b| markdown_to_html(b)),
       media_type: Some(MediaTypeHtml::Html),
       source: self.body.clone().map(Source::new),
-      url: self.url.clone().map(|u| u.into()),
       attachment: self.url.clone().map(Attachment::new).into_iter().collect(),
       image: self.thumbnail_url.clone().map(ImageObject::new),
       comments_enabled: Some(!self.locked),
@@ -163,11 +162,7 @@ impl ApubObject for ApubPost {
 
     // TODO: write mod log if stickied or locked changed
 
-    let url = if let Some(attachment) = page.attachment.first() {
-      Some(attachment.href.clone())
-    } else {
-      page.url
-    };
+    let url = page.attachment.first().map(|a| a.href.clone());
     let thumbnail_url: Option<Url> = page.image.map(|i| i.url);
     let (metadata_res, pictrs_thumbnail) = if let Some(url) = &url {
       fetch_site_data(context.client(), &context.settings(), Some(url)).await

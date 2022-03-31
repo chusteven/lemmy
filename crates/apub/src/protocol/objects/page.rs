@@ -44,10 +44,6 @@ pub struct Page {
   #[serde(default)]
   #[serde(deserialize_with = "crate::deserialize_skip_error")]
   pub(crate) source: Option<Source>,
-  /// deprecated, use attachment field
-  pub(crate) url: Option<Url>,
-  /// most software uses array type for attachment field, so we do the same. nevertheless, we only
-  /// use the first item
   #[serde(default)]
   pub(crate) attachment: Vec<Attachment>,
   pub(crate) image: Option<ImageObject>,
